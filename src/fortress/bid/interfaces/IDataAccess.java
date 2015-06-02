@@ -1,5 +1,7 @@
 package fortress.bid.interfaces;
 
+import fortress.bid.*;
+
 public interface IDataAccess {
 	
 
