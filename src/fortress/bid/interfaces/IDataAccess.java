@@ -2,7 +2,7 @@ package fortress.bid.interfaces;
 
 public interface IDataAccess {
 	
-<<<<<<< HEAD
+
 	public abstract void insertListing(Listing newListing);
 	
 	public abstract void getListingInProgress(int userID);
@@ -21,7 +21,4 @@ public interface IDataAccess {
 	
 	public abstract void getUserInfo (String usernameEntered);
 
-=======
-	
->>>>>>> 0f1daa55a96e44bcc250f73747f906a7412a1f55
 }
