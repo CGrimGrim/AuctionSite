@@ -1,6 +1,7 @@
 package fortress.bid.interfaces;
 
 import fortress.bid.*;
+import java.sql.ResultSet;
 
 public interface IDataAccess {
 	
@@ -15,13 +16,13 @@ public interface IDataAccess {
 	 * Gets all of a users listings in which they are acting as the seller that are currently in progress and have not yet sold or expired
 	 * @param userID id of the user currently logged in
 	 */
-	public abstract void getListingInProgress(int userID);
+	public abstract ResultSet getListingInProgress(int userID);
 	
 	/**
 	 * Gets all of the users listings where they are were acting as the seller which have successfully sold (time has expired and reservation amount was exceeded) 
 	 * @param userID id of the user currently logged in
 	 */
-	public abstract void getListingSold (int userID);
+	public abstract ResultSet getListingSold (int userID);
 	
 	/**
 	 * removes listings which are no longer in progress and have expired (no buyer found for the listing)
@@ -33,7 +34,7 @@ public interface IDataAccess {
 	 * searches for all listings where the searchTerm parameter is applicable
 	 * @param searchTerm string to search listings for
 	 */
-	public abstract void searchListings (String searchTerm);
+	public abstract ResultSet searchListings (String searchTerm);
 	
 	
 	/**
@@ -48,7 +49,7 @@ public interface IDataAccess {
 	 * Gets all listings where the user has won the auction
 	 * @param userID user currently logged in
 	 */
-	public abstract void getListingsPurchased (int userID);
+	public abstract ResultSet getListingsPurchased (int userID);
 	
 	/**
 	 * adds a new user into the database
@@ -60,6 +61,6 @@ public interface IDataAccess {
 	 * gets all information about a user
 	 * @param usernameEntered username of the user to retrieve information
 	 */
-	public abstract void getUserInfo (String usernameEntered);
+	public abstract ResultSet getUserInfo (String usernameEntered);
 
 }

@@ -6,7 +6,7 @@ import fortress.bid.*;
 
 public interface IAuctionService {
 	
-	public abstract boolean validateUser (String usernameEntered, String passwordEntered);
+	public abstract User validateUser (String usernameEntered, String passwordEntered);
 	
 	public abstract User getListingsInProgress (User currentUser);
 	
