@@ -147,13 +147,13 @@ public class DataAccess implements IDataAccess{
 	public void insertUser(User newUser) {
 		try{
 			connection = ds.getConnection();
-			String userName = newUser.getUserName();
+			String username = newUser.getUsername();
 			String password = newUser.getPassword();
 			//String email = newUser.getEmail();
 			
 			PreparedStatement statement = connection.prepareStatement("call newuser(?,?,?)");
 			
-			statement.setString(1, userName);
+			statement.setString(1, username);
 			statement.setString(2, password);
 			statement.setString(3, "null");
 			
@@ -170,6 +170,21 @@ public class DataAccess implements IDataAccess{
 			connection = ds.getConnection();
 			PreparedStatement statement = connection.prepareStatement("select * from user where username=?");
 			statement.setString(1, usernameEntered);
+			statement.execute();
+		}
+		catch(SQLException e){}
+		
+		return rs;
+	}
+
+	@Override
+	public ResultSet getListingHighestBid(int listingID) {
+		ResultSet rs = null;
+		
+		try{
+			connection = ds.getConnection();
+			PreparedStatement statement = connection.prepareStatement("call listinghighestbidbylistingid(?);");
+			statement.setInt(1, listingID);
 			statement.execute();
 		}
 		catch(SQLException e){}
