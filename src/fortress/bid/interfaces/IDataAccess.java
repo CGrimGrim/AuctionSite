@@ -62,5 +62,7 @@ public interface IDataAccess {
 	 * @param usernameEntered username of the user to retrieve information
 	 */
 	public abstract ResultSet getUserInfo (String usernameEntered);
+	
+	public abstract ResultSet getListingHighestBid (int listingID);
 
 }
