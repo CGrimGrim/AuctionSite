@@ -174,6 +174,7 @@ public class DataAccess implements IDataAccess{
 		return rs;
 	}
 
+
 	
 	@Override
 	public ResultSet getListingHighestBid(int listingID) {
@@ -203,5 +204,4 @@ public class DataAccess implements IDataAccess{
 		
 		return null;
 	}
-
 }
