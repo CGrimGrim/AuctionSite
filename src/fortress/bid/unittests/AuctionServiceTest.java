@@ -21,11 +21,13 @@ public class AuctionServiceTest {
 	String incorrectPassword = null;
 	AuctionService as = null;
 	User u = null;
+	User p = null;
 	
 	@BeforeClass
 	public void setUpBeforeClass() throws Exception{
 		as = new AuctionService();
 		u = new User(3, "SThomas", "SThomas");
+		p = new User(100, "Barney", "The Dinosaur");
 	
 	}
 
@@ -86,7 +88,7 @@ public class AuctionServiceTest {
 	@Test
 	public void getListingsCompletedReturnListingsCompleted(){
 		u = as.getListingsSold(u);
-		HashMap<Integer, Listing> results = u.getListingsCompleted();
+		HashMap<Integer, Listing> results = u.getListingsSold();
 		assertTrue(results.containsKey(3));
 		
 	}
@@ -94,8 +96,18 @@ public class AuctionServiceTest {
 	@Test
 	public void getListingsCompletedReturnsNoListingsCompleted(){
 		u = as.getListingsSold(u);
-		HashMap<Integer, Listing> results = u.getListingsCompleted();
+		HashMap<Integer, Listing> results = u.getListingsSold();
 		assertTrue(results.isEmpty());
+		
+	}
+	
+	@Test
+	public void getListingsExpiredReturnsListingsExpired(){
+		
+	}
+	
+	@Test
+	public void getListingsExpiredReturnsNoListingExpired(){
 		
 	}
 	

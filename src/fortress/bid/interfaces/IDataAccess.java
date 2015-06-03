@@ -64,5 +64,8 @@ public interface IDataAccess {
 	public abstract ResultSet getUserInfo (String usernameEntered);
 	
 	public abstract ResultSet getListingHighestBid (int listingID);
+	
+	public abstract ResultSet getListingsExpired(int userID);
+	
 
 }

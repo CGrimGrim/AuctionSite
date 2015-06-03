@@ -1,7 +1,9 @@
 package fortress.bid;
 
 import java.sql.*;
+
 import fortress.bid.exceptions.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -75,7 +77,7 @@ public class AuctionService implements IAuctionService{
 	@Override
 	public User getListingsSold(User currentUser) {
 		try{
-		ResultSet rs = da.getListingsSold(currentUser.getUserId());
+		ResultSet rs = da.getListingSold(currentUser.getUserId());
 		if (!rs.isBeforeFirst()){
 			return currentUser;
 		}
@@ -106,8 +108,6 @@ public class AuctionService implements IAuctionService{
 		return currentUser;
 	}
 
-	
-	
 	@Override
 	public User getListingsExpired(User currentUser) {
 		try{
@@ -142,8 +142,6 @@ public class AuctionService implements IAuctionService{
 		return currentUser;
 	}
 
-	
-	
 	@Override
 	public User getListingsPurchased(User currentUser) {
 		try{
@@ -160,8 +158,8 @@ public class AuctionService implements IAuctionService{
 									rs.getByte(10));
 			Integer i = new Integer(rs.getInt(1));
 			ResultSet hb = da.getListingHighestBid(rs.getInt(1));
-		     hb.next();
-		     l.setCurrentBid(hb.getDouble(3));
+		    hb.next();
+		    l.setCurrentBid(hb.getDouble(3));
 			ListingsPurchased.put(i, l);
 			
 			}
@@ -199,20 +197,52 @@ public class AuctionService implements IAuctionService{
 	}
 
 	@Override
-	public ArrayList<Listing> searchForListing(String searchTerm) {
+	public HashMap<Integer, Listing> searchForListing(String searchTerm) {
+		try{
+			ResultSet rs = da.searchListings(searchTerm);
+			HashMap<Integer, Listing> searchResult = new HashMap<>();
+			if(!rs.isBeforeFirst()){
+				return null;
+			}
+			else{
+				while(rs.next()){
+					Listing l = new Listing (rs.getInt(1), rs.getInt(2),rs.getString(3),
+							rs.getString(4), rs.getByte(5), rs.getByte(6),
+							rs.getDouble(7), rs.getDate(8).toLocalDate(), rs.getTime(9).toLocalTime(),
+							rs.getByte(10));
+					ResultSet hb = da.getListingHighestBid(rs.getInt(1));
+				    hb.next();
+				    l.setCurrentBid(hb.getDouble(3));
+				    Integer i = new Integer(rs.getInt(1));
+				    searchResult.put(i, l);
+				}
+				
+			}
+			
+			return searchResult;
+		}
+		catch(Exception e){
+		}
 		
+		return null;
 	}
 
 	@Override
 	public void registerUser(String username, String password, String email) {
-		// TODO Auto-generated method stub
+		User newUser = new User(username, password);
+		da.insertUser(newUser);
 		
 	}
 
 	@Override
 	public void removeListings(int[] listingIDs) {
+		da.removeListings(listingIDs);
+	}
+
+	@Override
+	public HashMap<Integer, Listing> getLatestListings() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 	
 	

@@ -5,11 +5,8 @@ import javax.naming.*;
 import org.apache.tomcat.jdbc.pool.*;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 import fortress.bid.interfaces.IDataAccess;
-import fortress.bid.*;
 
 public class DataAccess implements IDataAccess{
 
@@ -147,7 +144,7 @@ public class DataAccess implements IDataAccess{
 	public void insertUser(User newUser) {
 		try{
 			connection = ds.getConnection();
-			String userName = newUser.getUserName();
+			String userName = newUser.getUsername();
 			String password = newUser.getPassword();
 			//String email = newUser.getEmail();
 			
@@ -175,6 +172,36 @@ public class DataAccess implements IDataAccess{
 		catch(SQLException e){}
 		
 		return rs;
+	}
+
+	
+	@Override
+	public ResultSet getListingHighestBid(int listingID) {
+	   try{
+		connection = ds.getConnection();
+		CallableStatement cs = connection.prepareCall("call listinghighestbidbylistingid(?)");
+		cs.setInt(1, listingID);
+		return cs.executeQuery();
+	   }
+	   catch(SQLException e){
+	   }
+	   return null;
+	}
+	
+
+	@Override
+	public ResultSet getListingsExpired(int userID) {
+		try{
+			connection = ds.getConnection();
+			PreparedStatement ps = connection.prepareStatement("Select * from ");
+		    ps.setInt(1, userID);
+	    return ps.executeQuery();
+		}
+		catch(SQLException e){
+			
+		}
+		
+		return null;
 	}
 
 }

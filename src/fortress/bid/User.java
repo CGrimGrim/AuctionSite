@@ -9,7 +9,7 @@ public class User {
 	private String password;
 	private HashMap<Integer, Listing> listingsInProgress = null;
 	private HashMap<Integer, Listing> listingsExpired = null;
-	private HashMap<Integer, Listing> listingsCompleted = null;
+	private HashMap<Integer, Listing> listingsSold = null;
 	private HashMap<Integer, Listing> listingsPurchased = null;
 	
 	public User(String uname, String pword, boolean authStatus){
@@ -20,6 +20,11 @@ public class User {
 	
 	public User(int uid, String uname, String pword){
 		id = uid;
+		username = uname;
+		password = pword;
+	}
+	
+	public User(String uname, String pword){
 		username = uname;
 		password = pword;
 	}
@@ -40,8 +45,8 @@ public class User {
 		listingsExpired = newListings;
 	}
 	
-	public void setListingsCompleted(HashMap<Integer, Listing> newListings){
-		listingsCompleted = newListings;
+	public void setListingsSold(HashMap<Integer, Listing> newListings){
+		listingsSold = newListings;
 	}
 	
 	public void setListingsPurchased(HashMap<Integer, Listing> newListings){
@@ -60,8 +65,8 @@ public class User {
 		return listingsPurchased;
 	}
 	
-	public HashMap<Integer,Listing> getListingsCompleted(){
-		return listingsCompleted;
+	public HashMap<Integer,Listing> getListingsSold(){
+		return listingsSold;
 	}
 	
 	public void authenticate(){
