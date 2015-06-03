@@ -1,5 +1,6 @@
 package fortress.bid;
 
+import javax.annotation.Resource;
 import javax.naming.*;
 
 import org.apache.tomcat.jdbc.pool.*;
@@ -10,14 +11,16 @@ import fortress.bid.interfaces.IDataAccess;
 
 public class DataAccess implements IDataAccess{
 
+	@Resource(name = "jdbc/auctionsiteDB")
 	DataSource ds;
+	
 	Connection connection = null;
 	
 	public DataAccess(){
 		try{
 			Context initContext = new InitialContext();
 			Context envContext = (Context)initContext.lookup("java:comp/env");
-			ds = (DataSource)envContext.lookup("jdbc/TestAddressDB");
+			ds = (DataSource)envContext.lookup("jdbc/auctionsiteDB");
 		}
 		catch(Exception e){}
 	}
@@ -174,8 +177,6 @@ public class DataAccess implements IDataAccess{
 		return rs;
 	}
 
-
-	
 	@Override
 	public ResultSet getListingHighestBid(int listingID) {
 	   try{
@@ -188,7 +189,6 @@ public class DataAccess implements IDataAccess{
 	   }
 	   return null;
 	}
-	
 
 	@Override
 	public ResultSet getListingsExpired(int userID) {
@@ -204,4 +204,17 @@ public class DataAccess implements IDataAccess{
 		
 		return null;
 	}
+
+	public ResultSet getLatestListing(){
+		try{
+			connection = ds.getConnection();
+			return connection.prepareStatement("Select * from latestitems").executeQuery();
+		}
+		catch(SQLException e){
+			
+		}
+		return null;
+	}
+
+	
 }

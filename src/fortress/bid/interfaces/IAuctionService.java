@@ -1,6 +1,7 @@
 package fortress.bid.interfaces;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 
 import fortress.bid.*;
@@ -29,5 +30,7 @@ public interface IAuctionService {
 	public abstract void removeListings (int[] listingIDs);
 	
 	public abstract HashMap<Integer, Listing>getLatestListings();
+	
+	public abstract void createListing(int sellerId, String name, String desc, int condition, int category, double reserveAmount, LocalDate endDate, LocalTime endTime, byte status);
 
 }

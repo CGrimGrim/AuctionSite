@@ -1,10 +1,11 @@
 package fortress.bid;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import fortress.bid.exceptions.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import fortress.bid.interfaces.*;
@@ -14,7 +15,7 @@ public class AuctionService implements IAuctionService{
 	IDataAccess da = null;
 	
 	public AuctionService(){
-		IDataAccess da = new DataAccess();
+		da = new DataAccess();
 	}
 
 	@Override
@@ -179,18 +180,15 @@ public class AuctionService implements IAuctionService{
 	@Override
 	public void placeBid(int userID, Listing listing, double bidAmount) throws BidLowerThanCurrentBidException, BidOnOwnListingException, NegativeBidException {
 		
-		if(listing.getSellerid() == userID){
-			throw new BidOnOwnListingException(userID + " attempting to bid on listing : " + listing.getId());
-		}
-		
-		else if(listing.getCurrentBid() >= bidAmount ){
-			throw new BidLowerThanCurrentBidException(userID + "attempting to insert invalid bid on : " + listing.getId());
-		}
-		
-		else if(bidAmount <= 0){
+		if(bidAmount <= 0){
 			throw new NegativeBidException(userID + "attempting to insert invalid bid on : " + listing.getId());
 		}
-		
+		else if(listing.getSellerid() == userID){
+			throw new BidOnOwnListingException(userID + " attempting to bid on listing : " + listing.getId());
+		}
+		else if(listing.getCurrentBid() >= bidAmount ){
+			throw new BidLowerThanCurrentBidException(userID + "attempting to insert invalid bid on : " + listing.getId());
+		}		
 		else {
 			da.insertBid(listing.getId(), userID, bidAmount);
 		}
@@ -239,10 +237,42 @@ public class AuctionService implements IAuctionService{
 		da.removeListings(listingIDs);
 	}
 
+	
 	@Override
 	public HashMap<Integer, Listing> getLatestListings() {
-		// TODO Auto-generated method stub
+		try{
+			ResultSet rs = da.getLatestListing();
+			HashMap<Integer, Listing> latestListings = new HashMap<>();
+			if(!rs.isBeforeFirst()){
+				return null;
+			}
+			else{
+				while(rs.next()){
+					Listing l = new Listing (rs.getInt(1), rs.getInt(2),rs.getString(3),
+											rs.getString(4), rs.getByte(5), rs.getByte(6),
+											rs.getDouble(7), rs.getDate(8).toLocalDate(), rs.getTime(9).toLocalTime(),
+											rs.getByte(10));
+					Integer i = new Integer(rs.getInt(1));
+					ResultSet hb = da.getListingHighestBid(rs.getInt(1));
+					hb.next();
+					l.setCurrentBid(hb.getDouble(3));
+					latestListings.put(i, l);
+				}
+				
+				return latestListings;
+			}
+		}
+		catch(SQLException e){
+			
+		}
 		return null;
+		
+	}
+
+	@Override
+	public void createListing(int sellerId, String name, String desc, int condition, int category, double reserveAmount, LocalDate endDate, LocalTime endTime, byte status) {
+		Listing l = new Listing(sellerId, name, desc, (byte)condition, (byte)category, reserveAmount, endDate, endTime, (byte)status);
+		da.insertListing(l);
 	}
 	
 	

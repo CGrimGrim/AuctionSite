@@ -30,6 +30,22 @@ public class Listing {
 		
 		
 	}
+	
+	public Listing( int sid, String itname, String desc, byte cond, byte cat, double reserveAmt, LocalDate endD, LocalTime endT, byte stat){
+		
+		sellerid = sid;
+		itemName = itname;
+		description = desc;
+		condition = cond;
+		category = cat;
+		reserveAmount = reserveAmt;
+		endDate = endD;
+		endTime = endT;
+		status = stat;
+		
+		
+	}
+	
 	public int getId() {
 		return id;
 	}
