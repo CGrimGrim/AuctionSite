@@ -27,6 +27,7 @@ public class Listing {
 		endTime = endT;
 		status = stat;
 		
+		
 	}
 	public int getId() {
 		return id;

@@ -2,12 +2,16 @@ package fortress.bid.unittests;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fortress.bid.AuctionService;
+import fortress.bid.Listing;
+import fortress.bid.User;
 
 public class AuctionServiceTest {
 	
@@ -16,10 +20,13 @@ public class AuctionServiceTest {
 	String incorrectUsername = null;
 	String incorrectPassword = null;
 	AuctionService as = null;
+	User u = null;
 	
 	@BeforeClass
 	public void setUpBeforeClass() throws Exception{
 		as = new AuctionService();
+		u = new User(3, "SThomas", "SThomas");
+	
 	}
 
 	@Before
@@ -60,6 +67,37 @@ public class AuctionServiceTest {
 		
 	}
 	
+	@Test
+	public void getListingsInProgressReturnsListingInProgress(){
+		u = as.getListingsInProgress(u);
+		HashMap<Integer, Listing> results = u.getListingsInProgress();
+		assertTrue(results.containsKey(2));
+		
+	}
+	
+	@Test
+	public void getListingsInProgressReturnsNoListingsInProgress(){
+		u = as.getListingsInProgress(u);
+		HashMap<Integer, Listing> results = u.getListingsInProgress();
+		assertTrue(results.isEmpty());
+		
+	}
+	
+	@Test
+	public void getListingsCompletedReturnListingsCompleted(){
+		u = as.getListingsSold(u);
+		HashMap<Integer, Listing> results = u.getListingsCompleted();
+		assertTrue(results.containsKey(3));
+		
+	}
+	
+	@Test
+	public void getListingsCompletedReturnsNoListingsCompleted(){
+		u = as.getListingsSold(u);
+		HashMap<Integer, Listing> results = u.getListingsCompleted();
+		assertTrue(results.isEmpty());
+		
+	}
 	
 
 }

@@ -7,10 +7,10 @@ public class User {
 	private int id;
 	private String username;
 	private String password;
-	private HashMap<String, Listing> ListingsInProgress = null;
-	private HashMap<String, Listing> ListingsExpired = null;
-	private HashMap<String, Listing> ListingsCompleted = null;
-	private HashMap<String, Listing> ListingsPurchased = null;
+	private HashMap<Integer, Listing> listingsInProgress = null;
+	private HashMap<Integer, Listing> listingsExpired = null;
+	private HashMap<Integer, Listing> listingsCompleted = null;
+	private HashMap<Integer, Listing> listingsPurchased = null;
 	
 	public User(String uname, String pword, boolean authStatus){
 		username = uname;
@@ -19,6 +19,7 @@ public class User {
 	}
 	
 	public User(int uid, String uname, String pword){
+		id = uid;
 		username = uname;
 		password = pword;
 	}
@@ -31,4 +32,47 @@ public class User {
 		return id;
 	}
 	
+	public void setListingsInProgress(HashMap<Integer, Listing>  newListings){
+		listingsInProgress = newListings;
+	}
+	
+	public void setListingsExpired(HashMap<Integer, Listing> newListings){
+		listingsExpired = newListings;
+	}
+	
+	public void setListingsCompleted(HashMap<Integer, Listing> newListings){
+		listingsCompleted = newListings;
+	}
+	
+	public void setListingsPurchased(HashMap<Integer, Listing> newListings){
+		listingsPurchased = newListings;
+	}
+	
+	public HashMap<Integer, Listing> getListingsInProgress(){
+		return listingsInProgress;
+	}
+	
+	public HashMap<Integer, Listing> getListingsExpired(){
+		return listingsExpired;
+	}
+	
+	public HashMap<Integer, Listing> getlistingsPurchased(){
+		return listingsPurchased;
+	}
+	
+	public HashMap<Integer,Listing> getListingsCompleted(){
+		return listingsCompleted;
+	}
+	
+	public void authenticate(){
+		authenticated = true;
+	}
+	
+	public String getUsername(){
+		return username;
+	}
+	
+	public String getPassword(){
+		return password;
+	}
 }
