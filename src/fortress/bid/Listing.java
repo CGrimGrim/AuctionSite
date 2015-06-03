@@ -11,6 +11,7 @@ public class Listing {
 	private byte condition;
 	private byte category;
 	private double reserveAmount;
+	private double currentBid;
 	private LocalDate endDate;
 	private LocalTime endTime;
 	private byte status;
@@ -83,6 +84,14 @@ public class Listing {
 
 	public void setReserveAmount(double reserveAmount) {
 		this.reserveAmount = reserveAmount;
+	}
+	
+	public double getCurrentBid(){
+		return currentBid;
+	}
+	
+	public void setCurrentBid(double currentBid) {
+		this.currentBid = currentBid;
 	}
 
 	public LocalDate getEndDate() {

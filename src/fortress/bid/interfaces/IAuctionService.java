@@ -3,6 +3,9 @@ package fortress.bid.interfaces;
 import java.util.ArrayList;
 
 import fortress.bid.*;
+import fortress.bid.exceptions.BidLowerThanCurrentBidException;
+import fortress.bid.exceptions.BidOnOwnListingException;
+import fortress.bid.exceptions.NegativeBidException;
 
 public interface IAuctionService {
 	
@@ -16,7 +19,7 @@ public interface IAuctionService {
 	
 	public abstract User getListingsPurchased (User currentUser);
 	
-	public abstract void placeBid (int userID, int listingID, double bidAmount);
+	public abstract void placeBid (int userID, Listing listing, double bidAmount) throws BidLowerThanCurrentBidException, BidOnOwnListingException, NegativeBidException;
 	
 	public abstract ArrayList<Listing> searchForListing (String searchTerm);
 	
