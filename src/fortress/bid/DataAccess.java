@@ -215,6 +215,39 @@ public class DataAccess implements IDataAccess{
 		}
 		return null;
 	}
+	
+	public ResultSet getConditionList(){
+		try{
+			connection = ds.getConnection();
+			return connection.prepareStatement("Select * from conditions").executeQuery();
+		}
+		catch(SQLException e){
+			
+		}
+		return null;
+	}
+	
+	public ResultSet getCategoryList(){
+		try{
+			connection = ds.getConnection();
+			return connection.prepareStatement("Select * from category").executeQuery();
+		}
+		catch(SQLException e){
+			
+		}
+		return null;
+	}
+	
+	public ResultSet getStatusList(){
+		try{
+			connection = ds.getConnection();
+			return connection.prepareStatement("Select * from status").executeQuery();
+		}
+		catch(SQLException e){
+			
+		}
+		return null;
+	}
 
 	
 }

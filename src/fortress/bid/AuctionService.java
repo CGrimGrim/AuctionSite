@@ -6,9 +6,11 @@ import java.time.LocalTime;
 
 import fortress.bid.exceptions.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import fortress.bid.interfaces.*;
+import fortress.bid.dao.*;
 
 public class AuctionService implements IAuctionService{
 	
@@ -275,6 +277,48 @@ public class AuctionService implements IAuctionService{
 		da.insertListing(l);
 	}
 	
+	public ArrayList getConditionList(){
+		ResultSet rs = da.getConditionList();
+		ArrayList conditionList = new ArrayList();
+		if(!rs.isBeforeFirst()){
+			return null;
+		}
+		else{
+			while(rs.next()){
+				Condition c = new Condition(rs.getByte(1),rs.getString(2));
+				conditionList.add(c);
+				return conditionList;
+			}
+		}
+	}
 	
-
+	public ArrayList getCategoryList(){
+		ResultSet rs = da.getCategoryList();
+		ArrayList categoryList = new ArrayList();
+		if(!rs.isBeforeFirst()){
+			return null;
+		}
+		else{
+			while(rs.next()){
+				Category c = new Category(rs.getByte(1),rs.getString(2));
+				categoryList.add(c);
+				return categoryList;
+			}
+		}
+	}
+	
+	public ArrayList getStatusList(){
+		ResultSet rs = da.getStatusList();
+		ArrayList statusList = new ArrayList();
+		if(!rs.isBeforeFirst()){
+			return null;
+		}
+		else{
+			while(rs.next()){
+				Status c = new Status(rs.getByte(1),rs.getString(2));
+				statusList.add(c);
+				return statusList;
+			}
+		}
+	}
 }

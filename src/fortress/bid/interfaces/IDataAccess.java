@@ -69,5 +69,11 @@ public interface IDataAccess {
 
 	public abstract ResultSet getLatestListing();
 	
+	public abstract ResultSet getConditionList();
+	
+	public abstract ResultSet getCategoryList();
+	
+	public abstract ResultSet getStatusList();
+	
 
 }
