@@ -36,7 +36,7 @@ public class AuctionService implements IAuctionService{
 			
 		}
 		catch(SQLException e){
-			
+			System.out.println("Exception : " + e.getMessage());
 		}
 		
 		return new User(usernameEntered, passwordEntered, false);
@@ -239,7 +239,6 @@ public class AuctionService implements IAuctionService{
 		da.removeListings(listingIDs);
 	}
 
-	
 	@Override
 	public HashMap<Integer, Listing> getLatestListings() {
 		try{
@@ -277,48 +276,70 @@ public class AuctionService implements IAuctionService{
 		da.insertListing(l);
 	}
 	
-	public ArrayList getConditionList(){
-		ResultSet rs = da.getConditionList();
-		ArrayList conditionList = new ArrayList();
-		if(!rs.isBeforeFirst()){
-			return null;
-		}
-		else{
-			while(rs.next()){
-				Condition c = new Condition(rs.getByte(1),rs.getString(2));
-				conditionList.add(c);
-				return conditionList;
+	public ArrayList<Condition> getConditionList(){
+		ArrayList<Condition> conditionList = new ArrayList<>();
+		try{
+			ResultSet rs = da.getConditionList();
+			if(!rs.isBeforeFirst()){
+				return null;
 			}
+			else{
+				while(rs.next()){
+					Condition c = new Condition(rs.getByte(1),rs.getString(2));
+					conditionList.add(c);
+				}
+			}
+			
+			return conditionList;
 		}
+		catch(Exception e){
+			
+		}
+		
+		return conditionList;
 	}
 	
-	public ArrayList getCategoryList(){
-		ResultSet rs = da.getCategoryList();
-		ArrayList categoryList = new ArrayList();
-		if(!rs.isBeforeFirst()){
-			return null;
-		}
-		else{
-			while(rs.next()){
-				Category c = new Category(rs.getByte(1),rs.getString(2));
-				categoryList.add(c);
-				return categoryList;
+	public ArrayList<Category> getCategoryList(){
+		ArrayList<Category> categoryList = new ArrayList<>();
+		try{
+			ResultSet rs = da.getCategoryList();
+			if(!rs.isBeforeFirst()){
+				return null;
 			}
+			else{
+				while(rs.next()){
+					Category c = new Category(rs.getByte(1),rs.getString(2));
+					categoryList.add(c);
+				}
+			}
+		return categoryList;
 		}
+		catch(Exception e){
+			
+		}
+		return categoryList;
 	}
 	
-	public ArrayList getStatusList(){
-		ResultSet rs = da.getStatusList();
-		ArrayList statusList = new ArrayList();
-		if(!rs.isBeforeFirst()){
-			return null;
-		}
-		else{
-			while(rs.next()){
-				Status c = new Status(rs.getByte(1),rs.getString(2));
-				statusList.add(c);
+	public ArrayList<Status> getStatusList(){
+		ArrayList<Status> statusList = new ArrayList<Status>();
+		try{
+			ResultSet rs = da.getStatusList();
+			if(!rs.isBeforeFirst()){
+				return null;
+			}
+			else{
+				while(rs.next()){
+					Status c = new Status(rs.getByte(1),rs.getString(2));
+					statusList.add(c);
+				}
+				
 				return statusList;
 			}
 		}
+		catch(Exception e){
+			
+		}
+		
+		return statusList;
 	}
 }

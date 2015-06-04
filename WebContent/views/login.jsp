@@ -31,20 +31,19 @@
    		}
    		
    	}
-
 %><br><br>
 <div>
-<form class="form-horizontal" method="get">
+<form class="form-horizontal" method="get" action="http://localhost:8080/BidFortress/Controller">
   <div class="form-group">
     <label for="inputEmail3" class="col-sm-2 control-label">Username</label>
     <div class="col-sm-4">
-      <input name="username" type="text" class="form-control" id="inputEmail3" placeholder="Username">
+      <input name="username" type="text" class="form-control" id="inputEmail3" placeholder="username">
     </div>
   </div>
   <div class="form-group">
     <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
     <div class="col-sm-4">
-      <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password">
+      <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="password">
     </div>
   </div>
   <div class="form-group">
@@ -61,7 +60,7 @@
       <button type="submit" class="btn btn-primary col-sm-4">Sign in</button>
     </div>
   </div>
-<input type="hidden" name="methodcode" value="2">
+<input type="hidden" name="methodcode" value="9">
 </form>
 <%
 

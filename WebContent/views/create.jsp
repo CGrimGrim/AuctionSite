@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="fortress.bid.*"
-		 import="java.util.*" %>
+		 import="java.util.*" 
+		 import="fortress.bid.dao.*"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -40,7 +41,7 @@
          %>
  
       </ul>
-      <form class="navbar-form navbar-left" role="search">
+      <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="text" class="form-control" >
         </div>
@@ -69,33 +70,40 @@
 	  <li role="presentation"><a href="#">Jewelery</a></li>
 	</ul>
 </div>
-	<%
-       if(currentSession.getAttribute("CurrentUser") != null){
-    	   User currentUser = (User)currentSession.getAttribute("CurrentUser");
-    	   out.println("<h3 class=text-center>Welcome back " + currentUser.getUsername() + "</h3>");
-    	   out.println("<p class=text-center>Here are the 3 newest items</p>");
-       }
-       else{
-	       	out.println("<h3 class=text-center>Welcome to BidFortress</h3>");
-       }
-       if(currentSession.getAttribute("LatestListings") != null){
-    	   out.println("<p class=text-center>Here are the 3 newest items</p>");
-    	   HashMap<Integer, Listing> latest = (HashMap<Integer, Listing>)currentSession.getAttribute("LatestListings");
-    	   out.println("<div class=row align=center>");
-    	   for(Listing l : latest.values()){
-	    	   out.println("<a href=details.jsp?origin=Home&selectedListing="+l.getId()+"><div class='col-xs-2 col-centered'>"+
-	    	     "<div class=thumbnail>"+
-	    	       "<img src=../defaultImage.jpg width=240 height=240>"+
-	    	       "<div class=caption>"+
-	    	         "<h4>"+l.getItemName()+"</h4>"+
-	    	         "<p> Current Price: £"+l.getCurrentBid()+"</p>"+
-	    	       "</div>"+
-	    	     "</div>"+
-	    	   "</div></a>");
-	    	   
-    	 	}
-    	   out.println("</div>");
-       } 
-	%>
-</body>
+<div>
+	<h3>Sell your item</h3>
+	<div class="row">
+	<form action="controller" method="post">
+		<div>
+			<label>Item name </label><input type=text name=itemname>
+			<label>Condition </label>
+			<% 
+			ArrayList<Condition> con = (ArrayList<Condition>)currentSession.getAttribute("Conditions");
+			out.println("<label>Condition </label>");
+			out.println("<select name=conditionid  class=form-control>");
+			for(Condition c : con){
+				out.println("<option value="+c.getId()+">"+c.getName()+"</option>");
+			}
+		    out.println("</select>");
+		    out.println("<label>Category </label>");
+		    ArrayList<Category> cat = (ArrayList<Category>)currentSession.getAttribute("Categories");
+		    out.println("<select name=categoryid class=form-control>");
+		    for(Category c : cat){
+		    	out.println("<option value="+c.getId()+">"+c.getName()+"</option>");
+		    }
+		    out.println("</select>");
+		    %>
+		    <label>Description</label>
+		    <textarea name=description rows="3"></textarea>
+		</div>
+		<div>
+	    	<label>Reserve amount </label><input type=text class=form-control name=reserveamount>
+	    	<label>Image </label><input type=file>
+	    	<input type=submit value="Create" class="btn btn-primary">
+	    	<input type=hidden value=11>
+	    </div>
+	</form>
+	</div>
+</div>
+</body> 
 </html>

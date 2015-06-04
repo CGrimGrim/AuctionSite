@@ -21,11 +21,22 @@ import fortress.bid.exceptions.NegativeBidException;
 
 public class AuctionSiteController extends HttpServlet{
 	
-	AuctionService auctionService = new AuctionService();
+
+	AuctionService auctionService = null;
+	@Override
+	public void init(ServletConfig sc) throws ServletException{
+		auctionService = new AuctionService();
+	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		
-		switch(Integer.parseInt(request.getParameter("methodcode"))){
+		String s = request.getParameter("methodcode");
+		int input = 0;
+		if(request.getParameter("methodcode") == null){
+		    input = 9999;
+		}else{
+			input = Integer.parseInt(s);
+		}
+		switch(input){
 		case 1:
 			getLatestItems(request,response);
 			break;
@@ -86,9 +97,9 @@ public class AuctionSiteController extends HttpServlet{
 	private void getLatestListings(HttpServletRequest request, HttpServletResponse response){
 		HttpSession session = request.getSession();
 		session.setAttribute("LatestListings",auctionService.getLatestListings());
-		
+		getCreateListingLists(request, response);
 		try {
-			response.sendRedirect("");
+			response.sendRedirect("views/Home.jsp");
 		}
 		catch (IOException e) {}
 	}
@@ -211,11 +222,7 @@ public class AuctionSiteController extends HttpServlet{
 		session.setAttribute("ConditionList",auctionService.getConditionList());
 		session.setAttribute("CategoryList",auctionService.getCategoryList());
 		session.setAttribute("StatusList",auctionService.getStatusList());
-		
-		try {
-			response.sendRedirect("");
-		}
-		catch (IOException e) {}
+	
 		
 		/*try {
 			request.getRequestDispatcher("").forward(request, response);
@@ -225,28 +232,25 @@ public class AuctionSiteController extends HttpServlet{
 	}
 	
 	//******************************************************************************************************************
-	private void postLogin(HttpServletRequest request, HttpServletResponse response){
+	private void postLogin(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		HttpSession session = request.getSession(true);
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
 		User currentUser = auctionService.validateUser(username, password);
+		System.out.println("currentUser auth status : " + currentUser.isAuthenticated());
 		
 		if(currentUser.isAuthenticated()){
 			session.setAttribute("CurrentUser", currentUser);
-			/*try {
-				response.sendRedirect("");
-			}
-			catch (IOException e) {}*/
+			response.sendRedirect("views/Home.jsp");
+			return;
 		}else{
 			session.setAttribute("Authenticated", false);
-			/*try {
-				request.getRequestDispatcher("").forward(request, response);
-			}
-			catch (ServletException e) {}
-			catch (IOException e) {}*/
+			response.sendRedirect("views/login.jsp");
+			return;
 		}
+
 	}
 	
 	private void postRegisterUser(HttpServletRequest request, HttpServletResponse response){
@@ -284,24 +288,38 @@ public class AuctionSiteController extends HttpServlet{
 		catch (IOException e) {}
 	}
 	
-	private void postBid(HttpServletRequest request, HttpServletResponse response){
+	private void postBid(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		HttpSession session = request.getSession(true);
 		User currentUser = (User) session.getAttribute("CurrentUser");
-		
+		if(currentUser == null){
+			response.sendRedirect("views/login.jsp");
+			return;
+		}
 		int userID = currentUser.getUserId();
-		HashMap<Integer,Listing> searchResults = (HashMap<Integer, Listing>) session.getAttribute("SearchResults");
-		Listing listing = searchResults.get(Integer.parseInt(request.getParameter("listingid")));
+		Listing listing = null;
+		String redirectString = null;
+		if(session.getAttribute("origin").equals("Home")){
+			HashMap<Integer,Listing> LatestListings = (HashMap<Integer, Listing>) session.getAttribute("LatestListings");
+			listing = LatestListings.get(Integer.parseInt(request.getParameter("listingid")));
+			redirectString = "details.jsp?origin=Home&selectedListing="+request.getParameter("listingid");
+		}
+		else if(session.getAttribute("origin").equals("Results")){
+			HashMap<Integer,Listing> searchResults = (HashMap<Integer, Listing>) session.getAttribute("SearchResults");
+			listing = searchResults.get(Integer.parseInt(request.getParameter("listingid")));
+			redirectString = "details.jsp?origin=Results&selectedListing="+request.getParameter("listingid");
+		}
 		double bidAmount = Double.parseDouble(request.getParameter("bidamount"));
-		
 		try {
 			auctionService.placeBid(userID, listing, bidAmount);
+			listing.setCurrentBid(bidAmount);
 		}
-		catch (BidLowerThanCurrentBidException e1) {}
-		catch (BidOnOwnListingException e1) {}
+		catch (BidLowerThanCurrentBidException e1) { session.setAttribute("error", "bidToLow"); response.sendRedirect(redirectString); }
+		catch (BidOnOwnListingException e1) { session.setAttribute("error", "bitOnOwn"); response.sendRedirect(redirectString);}
 		catch (NegativeBidException e1) {}
 		
 		try {
-			response.sendRedirect("");
+			session.setAttribute("error", "Complete");
+			response.sendRedirect(redirectString);
 		}
 		catch (IOException e) {}
 

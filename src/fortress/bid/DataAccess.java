@@ -11,24 +11,29 @@ import fortress.bid.interfaces.IDataAccess;
 
 public class DataAccess implements IDataAccess{
 
-	@Resource(name = "jdbc/auctionsiteDB")
-	DataSource ds;
 	
 	Connection connection = null;
 	
 	public DataAccess(){
 		try{
-			Context initContext = new InitialContext();
-			Context envContext = (Context)initContext.lookup("java:comp/env");
-			ds = (DataSource)envContext.lookup("jdbc/auctionsiteDB");
+			Class.forName("com.mysql.jdbc.Driver");
 		}
 		catch(Exception e){}
+	}
+	
+	public void getConnection(){
+		try{
+			System.out.println("Setting Connection");
+			
+		}
+		catch(Exception e){
+			
+		}
 	}
 	
 	@Override
 	public void insertListing(Listing newListing) {
 		try{
-			connection = ds.getConnection();
 			
 			int userID = newListing.getId();
 			String itemName = newListing.getItemName();
@@ -61,7 +66,6 @@ public class DataAccess implements IDataAccess{
 		ResultSet rs = null;
 		
 		try{
-			connection = ds.getConnection();
 			PreparedStatement statement = connection.prepareStatement("select * from saleitems where user_id=?;");
 			statement.setInt(1, userID);
 			rs = statement.executeQuery();
@@ -76,7 +80,6 @@ public class DataAccess implements IDataAccess{
 		ResultSet rs = null;
 		
 		try{
-			connection = ds.getConnection();
 			PreparedStatement statement = connection.prepareStatement("select * from solditems where user_id=?;");
 			statement.setInt(1, userID);
 			rs = statement.executeQuery();
@@ -89,7 +92,6 @@ public class DataAccess implements IDataAccess{
 	@Override
 	public void removeListings(int[] listingIDs) {
 		try{
-			connection = ds.getConnection();
 			for(int i = 0; i<listingIDs.length;i++){
 				PreparedStatement statement = connection.prepareStatement("call removelisting(?);");
 				
@@ -105,7 +107,7 @@ public class DataAccess implements IDataAccess{
 		ResultSet rs = null;
 		
 		try{
-			connection = ds.getConnection();
+
 			PreparedStatement statement = connection.prepareStatement("call search(?);");
 			statement.setString(1, searchTerm);
 			rs = statement.executeQuery();
@@ -118,7 +120,7 @@ public class DataAccess implements IDataAccess{
 	@Override
 	public void insertBid(int listingID, int userID, double bidAmount) {
 		try{
-			connection = ds.getConnection();
+
 			PreparedStatement statement = connection.prepareStatement("call placebid(?,?,?)");
 			
 			statement.setInt(1, listingID);
@@ -134,7 +136,7 @@ public class DataAccess implements IDataAccess{
 	public ResultSet getListingsPurchased(int userID) {
 		ResultSet rs = null;
 		try{
-			connection = ds.getConnection();
+
 			PreparedStatement statement = connection.prepareStatement("call purchasehistory(?)");
 			statement.setInt(1, userID);
 			rs = statement.executeQuery();
@@ -146,7 +148,7 @@ public class DataAccess implements IDataAccess{
 	@Override
 	public void insertUser(User newUser) {
 		try{
-			connection = ds.getConnection();
+
 			String userName = newUser.getUsername();
 			String password = newUser.getPassword();
 			//String email = newUser.getEmail();
@@ -167,12 +169,12 @@ public class DataAccess implements IDataAccess{
 		ResultSet rs = null;
 		
 		try{
-			connection = ds.getConnection();
+
 			PreparedStatement statement = connection.prepareStatement("select * from user where username=?");
 			statement.setString(1, usernameEntered);
 			statement.execute();
 		}
-		catch(SQLException e){}
+		catch(SQLException e){ System.out.println("Exception : " + e.getMessage());}
 		
 		return rs;
 	}
@@ -180,7 +182,6 @@ public class DataAccess implements IDataAccess{
 	@Override
 	public ResultSet getListingHighestBid(int listingID) {
 	   try{
-		connection = ds.getConnection();
 		CallableStatement cs = connection.prepareCall("call listinghighestbidbylistingid(?)");
 		cs.setInt(1, listingID);
 		return cs.executeQuery();
@@ -193,7 +194,7 @@ public class DataAccess implements IDataAccess{
 	@Override
 	public ResultSet getListingsExpired(int userID) {
 		try{
-			connection = ds.getConnection();
+
 			PreparedStatement ps = connection.prepareStatement("Select * from ");
 		    ps.setInt(1, userID);
 	    return ps.executeQuery();
@@ -207,18 +208,18 @@ public class DataAccess implements IDataAccess{
 
 	public ResultSet getLatestListing(){
 		try{
-			connection = ds.getConnection();
+			connection = DriverManager.getConnection("jdbc:mysql://192.168.1.13/auctionsite", "newuser", "password");
 			return connection.prepareStatement("Select * from latestitems").executeQuery();
 		}
 		catch(SQLException e){
-			
+			System.out.println("Exception : " + e.getMessage());
+			System.out.println("Exception : " + e.getCause());
 		}
 		return null;
 	}
 	
 	public ResultSet getConditionList(){
 		try{
-			connection = ds.getConnection();
 			return connection.prepareStatement("Select * from conditions").executeQuery();
 		}
 		catch(SQLException e){
@@ -229,7 +230,6 @@ public class DataAccess implements IDataAccess{
 	
 	public ResultSet getCategoryList(){
 		try{
-			connection = ds.getConnection();
 			return connection.prepareStatement("Select * from category").executeQuery();
 		}
 		catch(SQLException e){
@@ -240,7 +240,6 @@ public class DataAccess implements IDataAccess{
 	
 	public ResultSet getStatusList(){
 		try{
-			connection = ds.getConnection();
 			return connection.prepareStatement("Select * from status").executeQuery();
 		}
 		catch(SQLException e){
