@@ -31,6 +31,10 @@ public class Listing {
 		
 	}
 	
+	public Listing(){
+		
+	}
+	
 	public Listing( int sid, String itname, String desc, byte cond, byte cat, double reserveAmt, LocalDate endD, LocalTime endT, byte stat){
 		
 		sellerid = sid;
