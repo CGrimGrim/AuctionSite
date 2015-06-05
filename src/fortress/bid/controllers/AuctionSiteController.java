@@ -69,9 +69,12 @@ public class AuctionSiteController extends HttpServlet{
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		
-		
+		System.out.println("entered DoPOST");
 		switch(Integer.parseInt(request.getParameter("methodcode"))){
 		case 9:
+			System.out.println("Login post has been called");
+			System.out.println(request.getParameter("username"));
+			System.out.println(request.getParameter("password"));
 			postLogin(request,response);
 			break;
 		case 10:
@@ -96,7 +99,13 @@ public class AuctionSiteController extends HttpServlet{
 	//******************************************************************************************************************
 	private void getLatestListings(HttpServletRequest request, HttpServletResponse response){
 		HttpSession session = request.getSession();
-		session.setAttribute("LatestListings",auctionService.getLatestListings());
+		HashMap<Integer, Listing> latestListings = new HashMap<>();
+		latestListings.put(new Integer(1), new Listing(1, 3, "Ikea Chair", "Flat pack chair from ikea, guaranteed to bring you hours of frustration whilst building", (byte)1, (byte)1, 0.00, LocalDate.now(), LocalTime.now(), (byte)2));
+		latestListings.put(new Integer(2), new Listing(2, 2, "HP Laptop", "Good for facebook, not much else", (byte)2, (byte)3, 0.00, LocalDate.now(), LocalTime.now(), (byte)1));
+		latestListings.put(new Integer(3), new Listing(3, 3,  "Levi Jeans", "Essential for covering your legs", (byte)3, (byte)4, 0.00, LocalDate.now(), LocalTime.now(), (byte)1));
+		
+		
+		session.setAttribute("LatestListings", latestListings);
 		getCreateListingLists(request, response);
 		try {
 			response.sendRedirect("views/Home.jsp");
@@ -222,13 +231,14 @@ public class AuctionSiteController extends HttpServlet{
 		session.setAttribute("ConditionList",auctionService.getConditionList());
 		session.setAttribute("CategoryList",auctionService.getCategoryList());
 		session.setAttribute("StatusList",auctionService.getStatusList());
+
+	}
 	
+	private void getListingsByCategory(HttpServletRequest request, HttpServletResponse response){
 		
-		/*try {
-			request.getRequestDispatcher("").forward(request, response);
-		}
-		catch (ServletException e) {}
-		catch (IOException e) {}*/
+		HttpSession session = request.getSession();
+		int listingID = Integer.parseInt(request.getParameter("listingID"));
+		session.setAttribute("SearchResults", auctionService.getListingsByCategory(listingID));
 	}
 	
 	//******************************************************************************************************************
@@ -237,20 +247,28 @@ public class AuctionSiteController extends HttpServlet{
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		String selectedID = request.getParameter("selectedID");
 		
 		User currentUser = auctionService.validateUser(username, password);
 		System.out.println("currentUser auth status : " + currentUser.isAuthenticated());
+		System.out.println("currentUser to String: " + currentUser.toString());
 		
 		if(currentUser.isAuthenticated()){
 			session.setAttribute("CurrentUser", currentUser);
+			if(request.getParameter("origin").equals("Home")){
 			response.sendRedirect("views/Home.jsp");
-			return;
+			}
+			else if(request.getParameter("origin").equals("Results")){
+			response.sendRedirect("views/details.jsp?origin=Results&selectedID="+selectedID);
+			}
+			
 		}else{
-			session.setAttribute("Authenticated", false);
+			session.setAttribute("Authenticated", "false");
 			response.sendRedirect("views/login.jsp");
 			return;
 		}
-
+		
+		response.sendRedirect("views/Home.jsp");
 	}
 	
 	private void postRegisterUser(HttpServletRequest request, HttpServletResponse response){
@@ -301,12 +319,12 @@ public class AuctionSiteController extends HttpServlet{
 		if(session.getAttribute("origin").equals("Home")){
 			HashMap<Integer,Listing> LatestListings = (HashMap<Integer, Listing>) session.getAttribute("LatestListings");
 			listing = LatestListings.get(Integer.parseInt(request.getParameter("listingid")));
-			redirectString = "details.jsp?origin=Home&selectedListing="+request.getParameter("listingid");
+			redirectString = "views/details.jsp?origin=Home&selectedListing="+request.getParameter("listingid");
 		}
 		else if(session.getAttribute("origin").equals("Results")){
 			HashMap<Integer,Listing> searchResults = (HashMap<Integer, Listing>) session.getAttribute("SearchResults");
 			listing = searchResults.get(Integer.parseInt(request.getParameter("listingid")));
-			redirectString = "details.jsp?origin=Results&selectedListing="+request.getParameter("listingid");
+			redirectString = "views/details.jsp?origin=Results&selectedListing="+request.getParameter("listingid");
 		}
 		double bidAmount = Double.parseDouble(request.getParameter("bidamount"));
 		try {

@@ -16,9 +16,9 @@
  <%
 	HttpSession currentSession = request.getSession();
     User currentUser = (User)currentSession.getAttribute("CurrentUser");
-   	if(currentUser != null){
-   		if(!currentUser.isAuthenticated()){
-   			out.println("<div class='alert alert-danger' role=alert>Login Failed: Username and/or Password is incorrect</div>");
+   	if(currentSession.getAttribute("Authenticated") != null){
+   		if(currentSession.getAttribute("Authenticated").equals("false")){
+   			out.println("<div class='alert alert-danger text-center' role=alert>Login Failed: Username and/or Password is incorrect</div>");
    		}
    	}
 	if(request.getParameter("methodcode") != null){
@@ -33,7 +33,7 @@
    	}
 %><br><br>
 <div>
-<form class="form-horizontal" method="get" action="http://localhost:8080/BidFortress/Controller">
+<form class="form-horizontal" method="post" action="http://localhost:8080/BidFortress/Controller">
   <div class="form-group">
     <label for="inputEmail3" class="col-sm-2 control-label">Username</label>
     <div class="col-sm-4">
@@ -61,6 +61,7 @@
     </div>
   </div>
 <input type="hidden" name="methodcode" value="9">
+<input type="hidden" name="origin" value=<% request.getParameter("origin"); %>>
 </form>
 <%
 

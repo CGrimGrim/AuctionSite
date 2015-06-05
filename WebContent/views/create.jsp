@@ -70,37 +70,38 @@
 	  <li role="presentation"><a href="#">Jewelery</a></li>
 	</ul>
 </div>
-<div>
-	<h3>Sell your item</h3>
-	<div class="row">
-	<form action="controller" method="post">
-		<div>
-			<label>Item name </label><input type=text name=itemname>
+<div class="">
+	<h3 class=text-center>Sell your item</h3>
+	<div class="row col-md-8 col-md-offset-2 form-group panel panel-default" >
+	<form class="form-horizontal">
+		<div class="col-md-8">
+			<label>Item name </label><br>
+			<input type=text name=itemname><br>
 			<label>Condition </label>
 			<% 
-			ArrayList<Condition> con = (ArrayList<Condition>)currentSession.getAttribute("Conditions");
+			ArrayList<Condition> con = (ArrayList<Condition>)currentSession.getAttribute("ConditionList");
 			out.println("<label>Condition </label>");
 			out.println("<select name=conditionid  class=form-control>");
 			for(Condition c : con){
 				out.println("<option value="+c.getId()+">"+c.getName()+"</option>");
 			}
-		    out.println("</select>");
-		    out.println("<label>Category </label>");
-		    ArrayList<Category> cat = (ArrayList<Category>)currentSession.getAttribute("Categories");
+		    out.println("</select><br>");
+		    out.println("<label>Category </label><br>");
+		    ArrayList<Category> cat = (ArrayList<Category>)currentSession.getAttribute("CategoryList");
 		    out.println("<select name=categoryid class=form-control>");
 		    for(Category c : cat){
 		    	out.println("<option value="+c.getId()+">"+c.getName()+"</option>");
 		    }
 		    out.println("</select>");
 		    %>
-		    <label>Description</label>
-		    <textarea name=description rows="3"></textarea>
+		    <label>Description</label><br>
+		    <textarea name=description rows="3" cols="50"></textarea>
 		</div>
-		<div>
-	    	<label>Reserve amount </label><input type=text class=form-control name=reserveamount>
-	    	<label>Image </label><input type=file>
+		<div class="col-md-4">
+	    	<label>Reserve amount </label><input type=number step=any min=0 class=form-control name=reserveamount value=0.00>
+	    	<label>Image </label><input type=file><br>
 	    	<input type=submit value="Create" class="btn btn-primary">
-	    	<input type=hidden value=11>
+	    	<input type=hidden name=methodcode value=11>
 	    </div>
 	</form>
 	</div>

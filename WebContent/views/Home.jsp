@@ -15,7 +15,8 @@
 </head>
 <body>
 <%
-	HttpSession currentSession = request.getSession(false);
+	HttpSession currentSession = request.getSession(true);
+    currentSession.setAttribute("origin", "Home");
 %>
 	<nav class="navbar navbar-default">
   <div class="container-fluid">
@@ -73,7 +74,6 @@
        if(currentSession.getAttribute("CurrentUser") != null){
     	   User currentUser = (User)currentSession.getAttribute("CurrentUser");
     	   out.println("<h3 class=text-center>Welcome back " + currentUser.getUsername() + "</h3>");
-    	   out.println("<p class=text-center>Here are the 3 newest items</p>");
        }
        else{
 	       	out.println("<h3 class=text-center>Welcome to BidFortress</h3>");

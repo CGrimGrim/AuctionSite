@@ -24,6 +24,7 @@ public class AuctionService implements IAuctionService{
 	public User validateUser(String usernameEntered, String passwordEntered) {
 		try{
 			ResultSet rs = da.getUserInfo(usernameEntered);
+        
 			if(!rs.isBeforeFirst()){
 				return new User(usernameEntered, passwordEntered, false);
 			}
@@ -341,5 +342,33 @@ public class AuctionService implements IAuctionService{
 		}
 		
 		return statusList;
+	}
+
+	public HashMap<Integer, Listing> getListingsByCategory(int listingID){
+		HashMap<Integer, Listing> listings =  new HashMap<Integer, Listing>();
+		try{
+			ResultSet rs = da.getListingsByCategory(listingID);
+			if(!rs.isBeforeFirst()){
+				return null;
+			}
+			else{
+				while(rs.next()){
+					Listing l = new Listing (rs.getInt(1), rs.getInt(2),rs.getString(3),
+							rs.getString(4), rs.getByte(5), rs.getByte(6),
+							rs.getDouble(7), rs.getDate(8).toLocalDate(), rs.getTime(9).toLocalTime(),
+							rs.getByte(10));
+					Integer i = new Integer(rs.getInt(1));
+					listings.put(i, l);
+				}
+			}
+			
+			return listings;
+			
+		}
+		catch(SQLException e){
+			
+		}
+		
+		return null;
 	}
 }

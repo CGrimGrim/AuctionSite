@@ -75,5 +75,7 @@ public interface IDataAccess {
 	
 	public abstract ResultSet getStatusList();
 	
+	public abstract ResultSet getListingsByCategory(int categoryID);
+	
 
 }

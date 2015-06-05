@@ -129,7 +129,9 @@ public class DataAccess implements IDataAccess{
 			
 			statement.execute();
 		}
-		catch(SQLException e){}
+		catch(SQLException e){
+			System.out.println("Exception occured placing bid");
+		}
 	}
 
 	@Override
@@ -169,10 +171,10 @@ public class DataAccess implements IDataAccess{
 		ResultSet rs = null;
 		
 		try{
-
-			PreparedStatement statement = connection.prepareStatement("select * from user where username=?");
+			connection = DriverManager.getConnection("jdbc:mysql://192.168.1.13/auctionsite", "newuser", "password");
+			PreparedStatement statement = connection.prepareStatement("select * from users where username=?");
 			statement.setString(1, usernameEntered);
-			statement.execute();
+			rs = statement.executeQuery();
 		}
 		catch(SQLException e){ System.out.println("Exception : " + e.getMessage());}
 		
@@ -248,5 +250,17 @@ public class DataAccess implements IDataAccess{
 		return null;
 	}
 
+	public ResultSet getListingsByCategory(int categoryID){
+		   try{
+				CallableStatement cs = connection.prepareCall("call listinghighestbidbycategoryID(?)");
+				cs.setInt(1, categoryID);
+				return cs.executeQuery();
+			   }
+			   catch(SQLException e){
+			   }
+			   return null;
+			}
+
+
+	}
 	
-}

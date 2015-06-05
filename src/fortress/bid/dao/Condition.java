@@ -1,6 +1,8 @@
 package fortress.bid.dao;
 
-public class Condition {
+import java.io.Serializable;
+
+public class Condition implements Serializable{
 	public int id;
 	public String name;
 	

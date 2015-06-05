@@ -70,8 +70,8 @@
 	</ul>
 </div>
 	<%
-		if(session.getAttribute("result") != null){
-			switch(session.getAttribute("error").toString()){
+		if(session.getAttribute("Result") != null){
+			switch(session.getAttribute("Result").toString()){
 			case "bidToLow":
 				out.println("<div class='alert alert-danger text-center' role=alert>Your Bid was too low! It must be above the current bid</div>");
 				break;
@@ -88,13 +88,12 @@
 		Category c = null;
 		Condition con = null;
 		out.println("<div class= 'col-md-6 col-centered'>");
-		if(request.getParameter("origin").equals("Home")){
+		if(currentSession.getAttribute("origin").equals("Home")){
 			listings = (HashMap<Integer, Listing>)currentSession.getAttribute("LatestListings");
-			currentSession.setAttribute("origin", "Home");
 			
 			
 		}
-		else if(request.getParameter("origin").equals("Results")){
+		else if(currentSession.getAttribute("origin").equals("Results")){
 			 listings = (HashMap<Integer, Listing>)currentSession.getAttribute("SearchResults");
 			 currentSession.setAttribute("origin", "Results");
 		}
@@ -123,7 +122,7 @@
 							"<form action=http://localhost:8080/BidFortress/Controller method=post class='form-inline'>"+
 							"<h2>"+l.getItemName()+"</h2>"+
 							"<h4>Current bid: £"+l.getCurrentBid()+"<h4>"+
-							"<input type=number  step=0.01  min=0 name=enteredbid class='form-control col-md-2'>"+
+							"<input type=number  step=0.01  min=0 name=bidamount class='form-control col-md-2'>"+
 							"<input type=submit value=Bid class='col-md-4 btn btn-primary'>"+
 							"<input type=hidden name=methodcode value=12>"+
 							"<input type=hidden name=listingid value="+l.getId()+">"+

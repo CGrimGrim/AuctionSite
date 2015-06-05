@@ -33,4 +33,6 @@ public interface IAuctionService {
 	
 	public abstract void createListing(int sellerId, String name, String desc, int condition, int category, double reserveAmount, LocalDate endDate, LocalTime endTime, byte status);
 
+	public abstract HashMap<Integer, Listing>getListingsByCategory(int listingID);
+
 }
